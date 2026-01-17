@@ -42,5 +42,4 @@ Instead of simply connecting point A to point B, our system analyzes the entire 
 - **Folium:** Map rendering and visualization.
 - **Geopy:** Distance calculations.
 
----
-*Created for the Hackathon 2026*
+
