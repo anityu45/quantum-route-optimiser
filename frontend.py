@@ -21,7 +21,7 @@ def render_sidebar():
             st.markdown("---")
             new_stop = st_searchbox(search_places, key="stop_box", label="Add Stop / Destination")
             
-            if st.button("➕ Add Location", use_container_width=True):
+            if st.button("Add Location", use_container_width=True):
                 if new_stop:
                     names = [s['name'] for s in st.session_state.stops_data]
                     if new_stop['name'] not in names:
@@ -64,13 +64,13 @@ def render_sidebar():
         st.divider()
         
         # --- Settings ---
-        with st.expander("⚙️ Logistics Costs"):
+        with st.expander("Logistics Costs"):
             is_round_trip = st.toggle("Return to Start?", value=False)
             col1, col2 = st.columns(2)
             mileage = col1.number_input("Km/L", value=12.0)
             fuel_price = col2.number_input("Fuel ₹", value=96.0)
 
-        go_btn = st.button("🚀 RUN QUANTUM ROUTER", type="primary", use_container_width=True)
+        go_btn = st.button("RUN QUANTUM ROUTER", type="primary", use_container_width=True)
         return start_loc, is_round_trip, mileage, fuel_price, go_btn
 
 def render_dashboard():
@@ -87,7 +87,7 @@ def render_dashboard():
         c4.metric("Cost", f"₹ {m['cost']:,.0f}")
 
         st.markdown("---")
-        st.subheader("🗺️ Live Tracking Map")
+        st.subheader("Tracking Map")
         map_obj = folium.Map(location=d['coords'][0], zoom_start=11, tiles="Cartodb Dark_Matter")
         
         # 1. Draw Main Route (Blue Solid)
