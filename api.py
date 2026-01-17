@@ -1,21 +1,18 @@
-import requests
-import polyline
+from geopy.distance import geodesic
 
-def get_osrm_route(coordinates):
-    locs = ";".join([f"{lon},{lat}" for lat, lon in coordinates])
+def get_route_shape(coordinates):
     
-    url = f"http://router.project-osrm.org/route/v1/driving/{locs}?overview=full&geometries=polyline"
+    path_points = coordinates
     
-    try:
-        r = requests.get(url)
-        if r.status_code != 200:
-            return None, 0, 0
-        data = r.json()
-        route = data['routes'][0]
-        points = polyline.decode(route['geometry'])
-        distance_km = route['distance'] / 1000
-        duration_min = route['duration'] / 60
-        return points, distance_km, duration_min
-    except Exception as e:
-        print(f"Routing Error: {e}")
-        return None, 0, 0
+    # 2. Calculate Total Distance (Sum of straight lines)
+    total_dist_km = 0
+    for i in range(len(coordinates) - 1):
+        # Calculate distance between point i and i+1 using geopy
+        dist = geodesic(coordinates[i], coordinates[i+1]).km
+        total_dist_km += dist
+        
+    # 3. Estimate Time (Assume average speed of 60 km/h)
+    # Time = Distance / Speed * 60 minutes
+    total_time_min = (total_dist_km / 60) * 60
+    
+    return path_points, total_dist_km, total_time_min
