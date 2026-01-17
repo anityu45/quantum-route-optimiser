@@ -1,4 +1,3 @@
-
 import requests
 import streamlit as st
 from geopy.geocoders import Nominatim
@@ -9,7 +8,6 @@ TOMTOM_API_KEY = "L4gkmNxotmMVp8KJ74X05dNffs2E1G55"
 
 @st.cache_data(ttl=3600)
 def search_places(search_term: str):
-    
     if not search_term: return []
     agent_id = st.session_state.get('user_agent_id', 'unknown')
     geolocator = Nominatim(user_agent=f"quantum_logistics_{agent_id}")
@@ -66,7 +64,6 @@ def get_road_path(coords):
     total_km = 0
     for i in range(len(coords) - 1):
         total_km += geodesic(coords[i], coords[i+1]).km
-    
     total_min = (total_km / 30) * 60
     
     return coords, total_km, total_min
