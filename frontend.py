@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
-import state, solver, api
+import state, app, api
 
 def render_sidebar():
     with st.sidebar:
@@ -34,7 +34,7 @@ def render_sidebar():
                     # 1. Sort the stops (The "Brain")
                     start = st.session_state.stops[0]
                     others = st.session_state.stops[1:]
-                    ordered_stops = solver.solve_simple_route(start, others)
+                    ordered_stops = app.solve_simple_route(start, others)
                     
                     # 2. Get the road lines (The "Visuals")
                     path_coords = [s['coords'] for s in ordered_stops]
