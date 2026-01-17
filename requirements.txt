@@ -1,6 +1,10 @@
 streamlit
 folium
-streamlit-folium
-geopy
-pandas
 requests
+pandas
+geopy
+streamlit-folium
+streamlit-searchbox
+networkx
+numpy
+sk-learn

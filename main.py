@@ -6,11 +6,7 @@ config.load_css()
 sessionstate.init_session_state()
 
 st.title("Quantum Logistics Optimizer")
-
-
 start_loc, is_round_trip, mileage, fuel_price, go_btn = frontend.render_sidebar()
-
-
 if go_btn:
     if not start_loc:
         st.error("Please select a start location.")
@@ -21,7 +17,6 @@ if go_btn:
            
             st.session_state.is_round_trip_active = is_round_trip
             
-           
             ordered_nodes = logic.optimize_route_algo(start_loc, st.session_state.stops_data, is_round_trip)
 
             main_nodes = ordered_nodes
