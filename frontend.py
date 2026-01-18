@@ -349,8 +349,4 @@ def render_analytics_view():
                 
                 st.line_chart(chart_df, x="Iteration", y="Energy", color="#00e5ff")
     else:
-<<<<<<< HEAD
         st.info("No optimization data available. Run the optimizer first.")
-=======
-        st.info("No optimization data available. Run the optimizer first.")
->>>>>>> cd88b04ddbdb7352224e067fad37941437e43295

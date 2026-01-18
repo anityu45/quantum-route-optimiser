@@ -149,6 +149,3 @@ CUSTOM_CSS = """
 
 def load_css():
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
-def set_page_config():
-    st.set_page_config(**PAGE_CONFIG)

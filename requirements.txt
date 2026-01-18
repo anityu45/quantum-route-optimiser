@@ -1,10 +1,9 @@
 streamlit
-folium
-requests
 pandas
-geopy
+folium
 streamlit-folium
 streamlit-searchbox
-networkx
+requests
 numpy
-sk-learn
+geopy
+scikit-learn

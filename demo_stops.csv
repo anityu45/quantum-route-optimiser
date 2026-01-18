@@ -1,0 +1,11 @@
+name,lat,lon,start_time,end_time
+Delhi (North Hub),28.6139,77.2090,9.0,18.0
+Jaipur (Pink City),26.9124,75.7873,10.0,14.0
+Mumbai (West Port),19.0760,72.8777,9.0,12.0
+Pune (Auto Hub),18.5204,73.8567,14.0,18.0
+Bangalore (Tech Hub),12.9716,77.5946,9.0,11.0
+Chennai (South Port),13.0827,80.2707,13.0,17.0
+Hyderabad (Central Hub),17.3850,78.4867,10.0,15.0
+Visakhapatnam (East Port),17.6868,83.2185,8.0,20.0
+Kolkata (East Hub),22.5726,88.3639,11.0,16.0
+Varanasi (Central UP),25.3176,82.9739,9.0,18.0

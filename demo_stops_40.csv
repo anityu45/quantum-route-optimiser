@@ -1,0 +1,41 @@
+name,lat,lon,start_time,end_time
+Delhi (North Hub),28.6139,77.2090,9.0,18.0
+Mumbai (West Port),19.0760,72.8777,9.0,17.0
+Bangalore (Tech Hub),12.9716,77.5946,10.0,19.0
+Chennai (South Port),13.0827,80.2707,8.0,16.0
+Kolkata (East Hub),22.5726,88.3639,9.0,18.0
+Hyderabad (Central Hub),17.3850,78.4867,10.0,18.0
+Pune (Auto Hub),18.5204,73.8567,9.0,17.0
+Ahmedabad (Textile City),23.0225,72.5714,8.0,16.0
+Jaipur (Pink City),26.9124,75.7873,10.0,18.0
+Surat (Diamond City),21.1702,72.8311,9.0,17.0
+Lucknow (Nawab City),26.8467,80.9462,9.0,18.0
+Kanpur (Leather City),26.4499,80.3319,10.0,19.0
+Nagpur (Orange City),21.1458,79.0882,8.0,16.0
+Indore (Clean City),22.7196,75.8577,9.0,17.0
+Thane (Lake City),19.2183,72.9781,10.0,18.0
+Bhopal (City of Lakes),23.2599,77.4126,9.0,18.0
+Visakhapatnam (Port City),17.6868,83.2185,8.0,17.0
+Pimpri-Chinchwad (Industrial),18.6298,73.7997,9.0,18.0
+Patna (Ancient City),25.5941,85.1376,10.0,19.0
+Vadodara (Cultural Capital),22.3072,73.1812,9.0,17.0
+Ghaziabad (Gateway of UP),28.6692,77.4538,8.0,16.0
+Ludhiana (Manchester of India),30.9010,75.8573,9.0,18.0
+Agra (Taj City),27.1767,78.0081,10.0,18.0
+Nashik (Wine Capital),19.9975,73.7898,9.0,17.0
+Faridabad (Industrial Hub),28.4089,77.3178,8.0,16.0
+Meerut (Sports City),28.9845,77.7064,9.0,18.0
+Rajkot (Engineering Hub),22.3039,70.8022,10.0,19.0
+Kalyan-Dombivli (Twin City),19.2403,73.1305,9.0,17.0
+Vasai-Virar (Coastal City),19.3919,72.8397,8.0,16.0
+Varanasi (Spiritual Capital),25.3176,82.9739,9.0,18.0
+Srinagar (Paradise on Earth),34.0837,74.7973,10.0,19.0
+Aurangabad (Tourism Hub),19.8762,75.3433,9.0,17.0
+Dhanbad (Coal Capital),23.7957,86.4304,8.0,16.0
+Amritsar (Golden City),31.6340,74.8723,9.0,18.0
+Navi Mumbai (Planned City),19.0330,73.0297,10.0,19.0
+Allahabad (Prayagraj),25.4358,81.8463,9.0,17.0
+Howrah (Twin City),22.5958,88.2636,8.0,16.0
+Ranchi (Waterfall City),23.3441,85.3096,9.0,18.0
+Gwalior (Fort City),26.2183,78.1828,10.0,19.0
+Jabalpur (Marble City),23.1815,79.9864,9.0,17.0

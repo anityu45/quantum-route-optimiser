@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+*.csv
+!demo_stops.csv
+!demo_stops_40.csv
+.env
+venv/
