@@ -1,5 +1,4 @@
 # config.py
-import streamlit as st
 PAGE_CONFIG = {
     "page_title": "Quantum Logistics Pro",
     "page_icon": "⚛️",
@@ -31,6 +30,3 @@ CUSTOM_CSS = """
     div.stButton > button:hover { background-color: #0039cb; }
 </style>
 """
-
-def load_css():
-    st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
