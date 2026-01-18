@@ -25,7 +25,8 @@
 *(Add your screenshots here with descriptive captions)*
 
 **Dashboard Overview**
-![Dashboard](https://via.placeholder.com/800x400/0b1021/00f3ff?text=Quantum+Logistics+Pro+Dashboard)
+![Dashboard](![WhatsApp Image 2026-01-18 at 7 42 13 AM](https://github.com/user-attachments/assets/4207e955-302b-4ba8-aa14-db6eed11a425)
+)
 
 **Multi-Vehicle Route Visualization**
 ![Route Map](https://via.placeholder.com/800x400/0b1021/00f3ff?text=Real-time+Fleet+Tracking+Map)
