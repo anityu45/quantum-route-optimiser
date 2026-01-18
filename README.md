@@ -29,10 +29,12 @@
 )
 
 **Multi-Vehicle Route Visualization**
-![Route Map](https://via.placeholder.com/800x400/0b1021/00f3ff?text=Real-time+Fleet+Tracking+Map)
+![Route Map](![WhatsApp Image 2026-01-18 at 7 42 13 AM (1)](https://github.com/user-attachments/assets/efe848ce-5f9b-4631-a820-ec03593dfc55)
+)
 
 **Quantum Analytics Panel**
-![Analytics](https://via.placeholder.com/800x400/0b1021/00f3ff?text=Quantum+Telemetry+and+Convergence+Graphs)
+![Analytics](![WhatsApp Image 2026-01-18 at 7 42 13 AM (2)](https://github.com/user-attachments/assets/aba9b203-e44c-4dcf-9b60-255c58ee07f1)
+)
 
 ---
 
