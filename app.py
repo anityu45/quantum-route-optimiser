@@ -76,13 +76,6 @@ def calculate_energy(route_indices, dist_matrix, time_matrix, nodes):
                 
     return total_dist
 
-def calculate_route_distance(route_indices, dist_matrix):
-    """Calculates pure distance for benchmarking (ignoring time penalties)."""
-    dist = 0
-    for i in range(len(route_indices)-1):
-        dist += dist_matrix[route_indices[i]][route_indices[i+1]]
-    return dist
-
 # ======================================================
 # 2. QUANTUM-INSPIRED SOLVER (Simulated Annealing)
 # ======================================================
@@ -100,12 +93,22 @@ def simulated_quantum_annealing(nodes, q_params=None):
          
     # Default Physics
     if q_params is None: q_params = {}
-    p_iter = q_params.get("iter", 1500)
-    p_cool = q_params.get("cool", 0.995)
+    p_iter = q_params.get("iter", 3000)
+    p_cool = q_params.get("cool", 0.998)
     p_temp = q_params.get("temp", 100)
     
     # Initial State
-    curr_route = list(range(n))
+    # IMPROVEMENT 1: Greedy Initialization (Nearest Neighbor)
+    # Starts the annealing process from a decent solution instead of a random one.
+    unvisited = set(range(1, n))
+    curr_route = [0]
+    curr_node = 0
+    while unvisited:
+        next_node = min(unvisited, key=lambda x: dist_matrix[curr_node][x])
+        curr_route.append(next_node)
+        unvisited.remove(next_node)
+        curr_node = next_node
+        
     curr_len = calculate_energy(curr_route, dist_matrix, time_matrix, nodes)
     best_route = curr_route[:]
     best_len = curr_len
@@ -123,10 +126,19 @@ def simulated_quantum_annealing(nodes, q_params=None):
     for _ in range(p_iter):
         temperature *= cooling_rate
         
-        # Random Mutation: Swap two nodes (excluding start node at index 0)
-        idx1, idx2 = np.random.randint(1, n), np.random.randint(1, n)
         new_route = curr_route[:]
-        new_route[idx1], new_route[idx2] = new_route[idx2], new_route[idx1]
+        
+        # IMPROVEMENT 2: Hybrid Mutation (Swap + 2-Opt)
+        # 50% chance to Swap (Teleport), 50% chance to Reverse (Untangle)
+        if np.random.rand() < 0.5:
+            idx1, idx2 = np.random.randint(1, n), np.random.randint(1, n)
+            new_route[idx1], new_route[idx2] = new_route[idx2], new_route[idx1]
+        else:
+            # 2-Opt: Reverse a segment to untangle crossing paths
+            i, j = np.random.randint(1, n), np.random.randint(1, n)
+            if i > j: i, j = j, i
+            # Reverse the sub-segment
+            new_route[i:j+1] = new_route[i:j+1][::-1]
         
         new_len = calculate_energy(new_route, dist_matrix, time_matrix, nodes)
         
@@ -142,6 +154,23 @@ def simulated_quantum_annealing(nodes, q_params=None):
                 best_route = curr_route
         
         energy_history.append(curr_len)
+
+    # IMPROVEMENT 3: Deterministic 2-Opt Polish
+    # Annealing finds the "valley", 2-Opt finds the very bottom.
+    # We run a quick pass to untangle any remaining knots.
+    improved = True
+    while improved:
+        improved = False
+        for i in range(1, n - 1):
+            for j in range(i + 1, n):
+                new_route = best_route[:]
+                new_route[i:j+1] = best_route[i:j+1][::-1]
+                new_len = calculate_energy(new_route, dist_matrix, time_matrix, nodes)
+                
+                if new_len < best_len:
+                    best_route = new_route
+                    best_len = new_len
+                    improved = True
                 
     return [nodes[i] for i in best_route], {
         "history": energy_history,
@@ -163,7 +192,7 @@ def solve_hybrid_quantum(start_node, stops_data, n_vehicles=1, q_params=None):
     n = len(all_nodes)
     
     # If 1 vehicle and small dataset, simple anneal
-    if n_vehicles == 1 and n < 10: 
+    if n_vehicles == 1 and n < 25: 
         r, s = simulated_quantum_annealing(all_nodes, q_params)
         return [r], s
     
@@ -183,14 +212,6 @@ def solve_hybrid_quantum(start_node, stops_data, n_vehicles=1, q_params=None):
     for idx, label in enumerate(kmeans.labels_):
         clusters[label].append(stops_data[idx])
         
-    # Calculate Centroids to determine geographic centers of groups
-    cluster_centroids = {}
-    for label, points in clusters.items():
-        if not points: continue
-        lats = [p['coords'][0] for p in points]
-        lons = [p['coords'][1] for p in points]
-        cluster_centroids[label] = (sum(lats)/len(lats), sum(lons)/len(lons))
-
     combined_stats = {"history": [], "tunnels": 0, "final_temp": 0}
 
     # --- CASE A: MULTI-VEHICLE (Independent Loops) ---
@@ -200,9 +221,11 @@ def solve_hybrid_quantum(start_node, stops_data, n_vehicles=1, q_params=None):
             if not sub_stops: continue
             # Each vehicle starts at Hub, visits cluster, returns to Hub (handled in main or here)
             # We just optimize [Hub] + [Cluster Nodes]
-            node_subset = [start_node] + sub_stops
-            optimized_sub, stats = simulated_quantum_annealing(node_subset, q_params)
-            routes.append(optimized_sub)
+            
+            # Recursively use single-vehicle logic to optimize this specific cluster
+            # This ensures large clusters are further broken down if necessary
+            sub_routes, stats = solve_hybrid_quantum(start_node, sub_stops, n_vehicles=1, q_params=q_params)
+            routes.append(sub_routes[0])
             combined_stats["tunnels"] += stats["tunnels"]
             combined_stats["history"].extend(stats["history"])
         return routes, combined_stats
@@ -210,16 +233,19 @@ def solve_hybrid_quantum(start_node, stops_data, n_vehicles=1, q_params=None):
     # --- STEP 2: Intelligent Cluster Dispatching ---
     # We navigate from cluster to cluster based on proximity
     final_route = [start_node]
-    remaining_clusters = list(cluster_centroids.keys())
+    remaining_clusters = [k for k in clusters.keys() if clusters[k]]
     
 
     while remaining_clusters:
         # Find the geographically nearest cluster to our current location
         curr_pos = final_route[-1]['coords']
-        nearest_cluster_idx = min(
-            remaining_clusters, 
-            key=lambda c: geodesic(curr_pos, cluster_centroids[c]).km
-        )
+        
+        # IMPROVEMENT 4: Single Linkage Clustering
+        # Instead of centroids, find the cluster containing the closest individual node.
+        def get_min_dist_to_cluster(c_idx):
+            return min(geodesic(curr_pos, node['coords']).km for node in clusters[c_idx])
+
+        nearest_cluster_idx = min(remaining_clusters, key=get_min_dist_to_cluster)
         
         sub_stops = clusters[nearest_cluster_idx]
         
@@ -236,39 +262,3 @@ def solve_hybrid_quantum(start_node, stops_data, n_vehicles=1, q_params=None):
         remaining_clusters.remove(nearest_cluster_idx)
         
     return [final_route], combined_stats
-
-# ======================================================
-# 4. CLASSICAL BASELINES (For Benchmarking)
-# ======================================================
-
-def solve_nearest_neighbor(n, dist_matrix):
-    """Greedy baseline algorithm."""
-    unvisited = set(range(1, n))
-    route = [0]
-    curr = 0
-    while unvisited:
-        nxt = min(unvisited, key=lambda x: dist_matrix[curr][x])
-        route.append(nxt)
-        unvisited.remove(nxt)
-        curr = nxt
-    return route
-
-def solve_two_opt(nodes, dist_matrix, time_matrix):
-    """Local search optimization (2-opt) on top of NN."""
-    n = len(nodes)
-    route = solve_nearest_neighbor(n, dist_matrix)
-    best_energy = calculate_energy(route, dist_matrix, time_matrix, nodes)
-    
-    improved = True
-    while improved:
-        improved = False
-        for i in range(1, n - 1):
-            for j in range(i + 1, n):
-                new_route = route[:]
-                new_route[i:j] = route[i:j][::-1]
-                new_energy = calculate_energy(new_route, dist_matrix, time_matrix, nodes)
-                if new_energy < best_energy:
-                    route = new_route
-                    best_energy = new_energy
-                    improved = True
-    return route

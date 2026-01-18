@@ -1,4 +1,5 @@
 # main.py
+import time
 import streamlit as st
 import config
 import sessionstate
@@ -8,29 +9,32 @@ import frontend
 
 # 1. Setup Page & State
 st.set_page_config(**config.PAGE_CONFIG)
-st.markdown(config.CUSTOM_CSS, unsafe_allow_html=True)
+config.load_css()
 sessionstate.init_session_state()
 
-st.title("⚛️ Quantum Logistics Pro")
-if not st.session_state.optimized_route:
-    st.info("👈 Please configure your stops in the sidebar and click RUN to start.")
+frontend.render_header()
 
 # 2. Render Sidebar Inputs
-start_loc, is_round_trip, mileage, fuel_price, fleet_size, q_params, go_btn = frontend.render_sidebar()
-
-# Store start_loc for benchmarking access later
-if start_loc: st.session_state.start_loc = start_loc
+page, start_loc, is_round_trip, mileage, fuel_price, fleet_size, q_params, go_btn = frontend.render_sidebar()
 
 # 3. Main Application Logic
 if go_btn:
     if not start_loc:
         st.error("⚠️ Please select a Start Location.")
+        st.session_state.solver_status = "Failed"
     elif not st.session_state.stops_data:
         st.error("⚠️ Please add at least one stop.")
+        st.session_state.solver_status = "Failed"
     else:
-        with st.spinner("⚛️ Initializing Quantum Tunneling Simulation..."):
+        with st.status("🚀 Initiating Quantum Sequence...", expanded=True) as status:
+            st.write("⚡ Initializing energy landscape...")
+            time.sleep(0.6)
+            st.write("⚛️ Tunneling through local minima...")
+            time.sleep(0.6)
+            st.write("🔄 Converging on optimal route...")
             
             st.session_state.is_round_trip_active = is_round_trip
+            st.session_state.solver_status = "Running"
             
             # --- CALL QUANTUM SOLVER ---
             # Logic returns the full ordered list. 
@@ -49,6 +53,7 @@ if go_btn:
             all_routes_geo = []
             all_markers = []
             all_coords = []
+            vehicle_metrics = []
             
             for v_idx, route_nodes in enumerate(routes_list):
                 # Get Geometry for this specific vehicle route
@@ -58,6 +63,12 @@ if go_btn:
                 total_km += km
                 total_min += mins
                 all_routes_geo.append(path_geo if path_geo else coords_seq)
+                
+                vehicle_metrics.append({
+                    "id": v_idx + 1,
+                    "dist": km,
+                    "time": mins
+                })
                 
                 # Collect Marker Data with Vehicle Info
                 for s_idx, node in enumerate(route_nodes):
@@ -80,7 +91,8 @@ if go_btn:
                 "dist": total_km,
                 "time": total_min,
                 "fuel": total_fuel,
-                "cost": total_cost
+                "cost": total_cost,
+                "vehicles": vehicle_metrics
             }
             
             # Store split geometries so Frontend can color them differently
@@ -93,7 +105,16 @@ if go_btn:
             # Store Quantum Analytics
             st.session_state.optimization_stats = stats
             
+            st.session_state.solver_status = "Completed"
+            status.update(label="Optimization Complete!", state="complete", expanded=False)
+            time.sleep(0.8)
             st.rerun()
 
 # 4. Render Results Dashboard
-frontend.render_dashboard()
+if page == "Route Optimizer":
+    if not st.session_state.optimized_route:
+        st.info("👈 Please configure your stops in the sidebar and click RUN to start.")
+    else:
+        frontend.render_optimizer_view()
+elif page == "Quantum Analytics":
+    frontend.render_analytics_view()

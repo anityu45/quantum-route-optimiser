@@ -18,3 +18,9 @@ def init_session_state():
         
     if 'is_round_trip_active' not in st.session_state:
         st.session_state.is_round_trip_active = False
+        
+    if 'optimization_stats' not in st.session_state:
+        st.session_state.optimization_stats = None
+        
+    if 'solver_status' not in st.session_state:
+        st.session_state.solver_status = "Idle"
