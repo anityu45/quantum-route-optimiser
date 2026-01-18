@@ -1,45 +1,71 @@
-# quantum-route-optimiser
-Hybrid Quantum-Classical solver for logistics routing. utilizing Metropolis-Hastings algorithms and Scikit-Learn to optimize delivery paths, visualize real-time traffic data, and reduce fuel costs. Built with Python &amp; Streamlit.
+# ⚛️ Quantum Logistics Pro
+### *Physics-Inspired Route Optimization for Next-Gen Supply Chains*
 
-# Quantum Logistics Optimizer
+**Quantum Logistics Pro** is a high-performance logistics engine that solves the Traveling Salesman Problem (TSP) using **Simulated Quantum Annealing**. By modeling delivery routes as "energy states," the system uses simulated tunneling to escape local minima, finding more efficient paths than traditional greedy algorithms.
 
-**Automated Route Planning for Last-Mile Delivery**
+---
 
-## Project Overview
-We built this project to solve a common problem in logistics: inefficient delivery routes. When a driver has 10 or more stops, figuring out the perfect order to visit them is incredibly difficult for a human. This leads to wasted fuel and late deliveries.
+## 📺 User Interface & Workflow
 
-Our application automates this process. It takes a list of delivery locations and uses a pathfinding algorithm to calculate the shortest, most efficient route connecting them all.
+The UI is built with a **Cyberpunk-Dark Aesthetic** using Streamlit, designed to provide dispatchers with a high-tech "command center" feel.
 
-## How It Works
-Instead of simply connecting point A to point B, our system analyzes the entire batch of locations. It uses a "Simulated Annealing" approach—a technique inspired by physics—to shuffle the order of stops until it finds a path that minimizes total travel distance.
+### 1. Data Input & Ingestion
+* **Search Integration:** Uses the `geopy` and `Nominatim` API for real-time location autocompletion.
+* **Bulk Upload:** Supports CSV ingestion (as seen in `demo_stops.csv`) for massive datasets.
+* **Fleet Configuration:** Adjust vehicle count, fuel prices, and vehicle mileage to calculate real-world ROI.
 
-## Key Features
-- **Route Optimization:** Instantly reorders messy delivery lists into a clean, logical path.
-- **Interactive Mapping:** Visualizes the route on a dark-mode map for easy tracking.
-- **CSV Upload:** Users can upload bulk data directly instead of entering addresses manually.
-- **Performance Metrics:** Real-time calculation of total distance and estimated travel time.
+> **[INSERT SCREENSHOT: SIDEBAR_INPUT_WORKFLOW]**
+> *Description: Sidebar showing the location search and fleet parameter sliders.*
 
-## How to Run This Project
+### 2. The Optimization Engine
+* **Live Simulation:** When "RUN" is clicked, the system initializes a "Quantum Tunneling Simulation." 
+* **Convergence Monitoring:** A live "Energy Landscape" chart (via `st.line_chart`) shows the algorithm finding lower-cost routes in real-time.
 
-1.  **Install Dependencies**
-    Run the following command to install the necessary Python libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
+> **[INSERT SCREENSHOT: OPTIMIZATION_DASHBOARD]**
+> *Description: The main dashboard showing the energy convergence graph and the 'Tunneling Events' metric.*
 
-2.  **Start the Application**
-    Launch the interface using Streamlit:
-    ```bash
-    streamlit run main.py
-    ```
+### 3. Geospatial Visualization
+* **Interactive Maps:** Powered by `Folium`, the app renders real-road geometry.
+* **Multi-Vehicle Support:** Each vehicle route is color-coded and assigned a unique ID for clear dispatcher visibility.
 
-3.  **Test with Data**
-    We have included a file named `demo_data.csv`. Upload this file in the sidebar to see the optimization in action.
+> **[INSERT SCREENSHOT: ROUTE_MAP_VIEW]**
+> *Description: Folium map showing color-coded road paths for multiple delivery vehicles.*
 
-## Technologies Used
-- **Python:** Core logic and calculation.
-- **Streamlit:** User interface and frontend.
-- **Folium:** Map rendering and visualization.
-- **Geopy:** Distance calculations.
+---
 
+## ⚙️ Backend Architecture (Function-by-Function)
 
+The backend is modularized to separate the physics-inspired math from the API handling.
+
+### `app.py`: The Quantum Core
+* **`build_matrices(nodes)`**: 
+    * *Use Case:* Converts a list of GPS coordinates into a Distance and Time matrix. 
+    * *Logic:* It queries the **OSRM Table API** to get real road distances instead of "as-the-crow-flies" math.
+* **`calculate_energy(route, ...)`**: 
+    * *Use Case:* The "Objective Function." 
+    * *Logic:* Calculates total distance + penalties for late deliveries (Time Window violations). Lower energy = better route.
+* **`solve_hybrid_quantum(...)`**: 
+    * *Use Case:* The main solver. 
+    * *Logic:* Orchestrates K-Means clustering for fleet splitting and runs the Annealing algorithm on each cluster.
+
+### `api.py`: External Integrations
+* **`get_road_path(coords)`**: 
+    * *Use Case:* Pathfinding.
+    * *Logic:* A multi-tier fallback system. It first tries **TomTom API** (for traffic-aware routing), falls back to **OSRM**, and finally uses straight lines if offline.
+* **`search_places(search_term)`**: 
+    * *Use Case:* UI Searchbox.
+    * *Logic:* Connects the frontend search bar to the OpenStreetMap database.
+
+### `logic.py`: Benchmarking & Orchestration
+* **`run_benchmark_suite(...)`**: 
+    * *Use Case:* Competitive Analysis.
+    * *Logic:* Simultaneously runs **Nearest Neighbor**, **2-opt**, and the **Quantum Solver**. It calculates the "Improvement %" to prove the Quantum solver's superiority.
+
+---
+
+## 🛠️ Installation & Setup
+
+1. **Clone the Project**
+   ```bash
+   git clone [https://github.com/your-username/quantum-logistics.git](https://github.com/your-username/quantum-logistics.git)
+   cd quantum-logistics
