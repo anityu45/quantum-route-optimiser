@@ -1,13 +1,14 @@
+# api.py
 import requests
 import streamlit as st
 from geopy.geocoders import Nominatim
-from geopy.distance import geodesic
 
-
+# Optional: Add TomTom Key if available, otherwise it uses OSRM (Free)
 TOMTOM_API_KEY = "L4gkmNxotmMVp8KJ74X05dNffs2E1G55"  
 
 @st.cache_data(ttl=3600)
 def search_places(search_term: str):
+    """Autocomplete search function."""
     if not search_term: return []
     agent_id = st.session_state.get('user_agent_id', 'unknown')
     geolocator = Nominatim(user_agent=f"quantum_logistics_{agent_id}")
@@ -20,10 +21,13 @@ def search_places(search_term: str):
         return []
 
 def get_road_path(coords):
-   
+    """
+    Fetches real road geometry.
+    Priority: TomTom -> OSRM -> Straight Line (Fallback)
+    """
     if len(coords) < 2: return None, 0, 0
     
-    
+    # 1. Try TomTom (High Accuracy)
     if TOMTOM_API_KEY:
         try:
             loc_string = ":".join([f"{lat},{lon}" for lat, lon in coords])
@@ -44,7 +48,7 @@ def get_road_path(coords):
         except Exception:
             pass
 
-
+    # 2. Try OSRM (Open Source / Free)
     loc_string = ";".join([f"{lon},{lat}" for lat, lon in coords])
     url = f"http://router.project-osrm.org/route/v1/driving/{loc_string}?overview=full&geometries=geojson"
     try:
@@ -60,10 +64,5 @@ def get_road_path(coords):
     except Exception:
         pass
 
-   
-    total_km = 0
-    for i in range(len(coords) - 1):
-        total_km += geodesic(coords[i], coords[i+1]).km
-    total_min = (total_km / 30) * 60
-    
-    return coords, total_km, total_min
+    # 3. Fallback to Straight Lines
+    return coords, 0, 0
